@@ -20,7 +20,6 @@ export default function Filters({
   // const [mobFilters, setMobFilters] = useState(false)
 
   let checkboxes = []
-  // console.log("!!!!!!!!!!!!!!!", filters)
   for (let key in filters) {
 
     if (key !== "price") {
@@ -31,10 +30,6 @@ export default function Filters({
           <div className={moduleStyles.filterBlock}>
             {
               Object.keys({ ...filters[key] }).map(val => {
-                // console.log("--======--")
-                // console.log("key", key)
-                // console.log("filters[key]", filters[key])
-                // console.log("filters[key][val]", filters[key][val])
                 return (
                   <div key={val}
                     className={moduleStyles.checkBoxFilter}>

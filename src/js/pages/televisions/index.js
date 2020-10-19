@@ -10,13 +10,20 @@ import PageLayout from '../../components/pageLayouts/layout1'
 
 /* other */
 import { urlBuilder } from '../../routes'
-import { getTelevisionsRequest, filterSuccess, setPriceRangeSuccess } from '../../Redux/actionCreators'
+import {
+  getTelevisionsRequest,
+  filterSuccess,
+  setPriceRangeSuccess,
+  addToCartSuccess,
+  removeFromCartSuccess,
+  changeAmountSuccess
+} from '../../Redux/actionCreators'
 
 /* styles */
 import moduleStyles from './tv.module.scss'
 
 
-function tv(props) {
+function TvPage(props) {
   /* из CartStore нужно */
   // 	-inCart()
   // 	-addToCart()
@@ -32,6 +39,12 @@ function tv(props) {
   const labels = tvsState._labels
   const filters = tvsState.filters
 
+  const cartState = useSelector(state => state.cart)
+
+  const inCart = (store, id) => {
+    return id in store.products
+  }
+
   //get tvs from server
   useEffect(() => {
     // console.log("useEffect")
@@ -41,7 +54,7 @@ function tv(props) {
   const products = tvs.map(tv => {
     return <LineCard
       key={tv.id}
-      // inCart={cart.inCart(tv.id)}
+      inCart={inCart(cartState, tv.id)}
       img={{
         path: `${baseUrlImgs}${tv.imgs[0]}`
       }}
@@ -57,15 +70,15 @@ function tv(props) {
       onClick={() => { props.history.push(urlBuilder('television', tv.id)) }}
       button={
         <BtnAddToCart
-        // inCart={cart.inCart(tv.id)}
-        // onAdd={() => { cart.addToCart(tv.id) }}
-        // onRemove={() => { cart.removeFromCart(tv.id) }} 
+          inCart={inCart(cartState, tv.id)}
+          onAdd={() => { dispatch(addToCartSuccess(cartState, tv.id)) }}
+          onRemove={() => { dispatch(removeFromCartSuccess(cartState, tv.id)) }}
         />
       }
       counter={<Counter
         max={tv.rest}
-        // cnt={cart.products[tv.id] ? cart.products[tv.id].amount : 0}
-        // onChange={(cnt) => { cart.changeAmount(tv.id, cnt) }}
+        cnt={cartState.products[tv.id] ? cartState.products[tv.id].amount : 0}
+        onChange={(cnt) => { dispatch(changeAmountSuccess(cartState, tv.id, cnt)) }}
         className={moduleStyles.counter} />
       }
     >
@@ -86,7 +99,7 @@ function tv(props) {
   )
 }
 
-export default tv
+export default TvPage
 
 
 // //television store

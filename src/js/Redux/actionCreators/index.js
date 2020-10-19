@@ -8,7 +8,15 @@ import {
   FILTER_REQUEST,
   FILTER_SUCCESS,
   SET_PRICE_RANGE_REQUEST,
-  SET_PRICE_RANGE_SUCCESS
+  SET_PRICE_RANGE_SUCCESS,
+  ADD_TO_CART_REQUEST,
+  ADD_TO_CART_SUCCESS,
+  REMOVE_FROM_CART_REQUEST,
+  REMOVE_FROM_CART_SUCCESS,
+  GET_PRODUCTS_FROM_LOCALSTORAGE_REQUEST,
+  GET_PRODUCTS_FROM_LOCALSTORAGE_SUCCESS,
+  CHANGE_CNT_REQUEST,
+  CHANGE_CNT_SUCCESS
 } from '../actionTypes'
 
 export function getTelevisionsRequest() {
@@ -148,5 +156,98 @@ export function setPriceRangeSuccess(filters = null, values = null) {
   return {
     type: SET_PRICE_RANGE_SUCCESS,
     payload: copyFilters
+  }
+}
+
+export function addToCartRequest() {
+  return {
+    type: ADD_TO_CART_REQUEST
+  }
+}
+
+export function addToCartSuccess(state, id) {
+  if (!(id in state.products)) {
+    window.localStorage.setItem(id, 1)
+    let products = { ...state.products }
+    products[id] = { amount: 1 }
+
+    return {
+      type: ADD_TO_CART_SUCCESS,
+      payload: products
+    }
+  } else {
+    return {
+      //todo нужно обработать нотесы и ошибки
+      // type: ADD_TO_CART_SUCCESS,
+      // payload: state
+    }
+  }
+}
+
+export function removeFromCartRequest() {
+  return {
+    type: REMOVE_FROM_CART_REQUEST
+  }
+}
+
+export function removeFromCartSuccess(state, id) {
+  if (id in state.products) {
+    window.localStorage.removeItem(id)
+    let products = { ...state.products }
+    delete products[id]
+    return {
+      type: REMOVE_FROM_CART_SUCCESS,
+      payload: products
+    }
+  } else {
+    return {
+      //todo нужно обработать нотесы и ошибки
+      // type: REMOVE_FROM_CART_SUCCESS,
+      // payload: state
+    }
+  }
+}
+
+export function getCartFromLocalStorageRequest() {
+  return {
+    type: GET_PRODUCTS_FROM_LOCALSTORAGE_REQUEST
+  }
+}
+
+export function getCartFromLocalStorageSuccess(state) {
+  let products = { ...state.products }
+  Object.keys(window.localStorage).forEach(id => {
+    id !== 'loglevel:webpack-dev-server' ?
+      products[id] = { amount: parseInt(window.localStorage.getItem(id)) } :
+      false
+  })
+
+  return {
+    type: GET_PRODUCTS_FROM_LOCALSTORAGE_SUCCESS,
+    payload: products
+  }
+}
+
+export function changeAmountRequest() {
+  return {
+    type: CHANGE_CNT_REQUEST
+  }
+}
+
+export function changeAmountSuccess(state, id, amount) {
+  let products = { ...state.products, [id]: { ...state.products[id] } }
+  if (id in state.products) {
+    window.localStorage.setItem(id, amount)
+    products[id] = { ...products[id], amount }
+    return {
+      type: CHANGE_CNT_SUCCESS,
+      payload: products
+    }
+  } else {
+    return {
+      //todo нужно обработать нотесы и ошибки
+      // type: REMOVE_FROM_CART_SUCCESS,
+      // payload: state
+    }
   }
 }
