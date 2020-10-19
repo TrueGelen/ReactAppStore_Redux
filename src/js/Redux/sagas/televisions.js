@@ -1,26 +1,36 @@
 /* libs */
-import { takeEvery, put, call } from 'redux-saga/effects'
+import { takeEvery, put, call, all } from 'redux-saga/effects'
 /* actionTypes */
 import {
-	GET_TELEVISIONS_REQUEST,
-	GET_TELEVISIONS_SUCCESS,
-	GET_TELEVISION_REQUEST,
-	GET_TELEVISION_SUCCESS,
-	SET_FILTERS
+  SET_PRICE_RANGE_SUCCESS
 } from '../actionTypes'
 /* api */
 import { getTelevisions, getTvById } from '../../serverApiModel/televisions'
+/* actionCreators */
+import {
+  getTelevisionsRequest,
+  getTelevisionsSuccess,
+  setFiltersRequest,
+  setFiltersSuccess,
+  filterRequest,
+  filterSuccess
+} from '../actionCreators'
+/* store */
+import store from '../store'
 
 export function* getTVsFromServerSageWatcher() {
-	// yield console.log("getTVsFromServerSageWatcher")
-	yield takeEvery(GET_TELEVISIONS_REQUEST, getTVsFromServerSagaWorker)
+  yield takeEvery(getTelevisionsRequest().type, getTVsFromServerSagaWorker)
+  yield takeEvery(SET_PRICE_RANGE_SUCCESS, setPriceRangeSagaWorker)
 }
 
 function* getTVsFromServerSagaWorker() {
-	// yield console.log("getTVsFromServerSagaWorker")
-	const tvs = yield call(getTelevisions)
-	yield put({ type: GET_TELEVISIONS_SUCCESS, payload: tvs })
-	yield put({ type: SET_FILTERS })
+  // yield console.log("getTVsFromServerSagaWorker")
+  const tvs = yield call(getTelevisions)
+  yield put(getTelevisionsSuccess(tvs))
+  yield put(setFiltersSuccess(store.getState().televisions))
 }
 
-
+function* setPriceRangeSagaWorker() {
+  // console.log("setPriceRangeSagaWorker", store.getState().televisions)
+  yield put(filterSuccess(store.getState().televisions))
+}
