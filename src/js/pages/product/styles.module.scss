@@ -1,0 +1,378 @@
+@import '../../../scss/smart-grid.sass';
+@import '../../../scss/vars.scss';
+
+.layout{
+  width: 100%;
+  background-color: $lb;
+  border-radius: $br;
+
+  padding: 15px 25px;
+  margin-top: 20px;
+
+  @media screen and (min-width: 1921px){
+    border-radius: $br1921;
+
+    padding: .75vw 1.25vw;
+    margin-top: 1vw;
+  }
+
+  @media screen and (max-width: 1200px){
+    border-radius: $br;
+    padding: 1.5vw 2.5vw;
+    margin-top: 2vw;
+  }
+
+  @include sm-block{
+    padding: 2.25vw 3.75vw;
+    margin-top: 3vw;
+  }
+
+  @include xs-block{
+    padding: 1.5vw 2vw;
+    margin-top: 10px;
+  }
+}
+
+.content{
+  @extend .layout;
+
+  display: flex;
+  align-items: center;
+
+  @include sm-block{
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+.title{
+  @extend .layout;
+
+  margin-top: 0;
+
+  font-family: sans-serif;
+  font-size: 35px;
+
+  @media screen and (min-width: 1921px){
+    font-size: 1.75vw;
+    margin-top: 0;
+  }
+
+  @media screen and (max-width: 1200px){
+    font-size: 3vw;
+    margin-top: 0;
+  }
+
+  @include sm-block{
+    font-size: 4.5vw;
+  }
+
+  @include xs-block{
+    margin-top: 10px;
+    font-size: 5vw;
+  }
+}
+
+.slider{
+  border: 1px solid $border;
+  border-radius: $br;
+  position: relative;
+  width: 500px;
+  height: 400px;
+  margin: 0;
+
+  @media screen and (min-width: 1921px){
+    border-radius: $br1921;
+    width: 25vw;
+    height: 20vw;
+  }
+
+  @media screen and (max-width: 1200px){
+    border-radius: $br;
+    width: 40vw;
+    height: 30vw;
+  }
+
+  @include sm-block{
+    width: 50%;
+    height: 34vw;
+  }
+
+  @include xs-block{
+    width: 100%;
+    height: 50vw;
+  }
+
+  & > div{
+
+    &:first-child{
+      @include sm(left, 0);
+    }
+
+    &:nth-child(2){
+      @include sm(right, 0);
+    }
+
+    &:first-child:after, &:nth-child(2):after{
+      @include sm-block{
+        font-size: 6vw;
+      }
+    }
+  }
+}
+
+.slide{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > *{
+    max-width: calc(100% - 100px);
+    max-height: 100%;
+
+    @media screen and (min-width: 1921px){
+      max-width: calc(100% - 5vw);
+    }
+
+    @media screen and (max-width: 1200px){
+      max-width: calc(100% - 10vw);
+    }
+
+    @include sm-block{
+      max-width: calc(100% - 8vw);
+    }
+  }  
+}
+
+.description{
+  // border: 1px solid red;
+  margin-left: 25px;
+
+  @media screen and (min-width: 1921px){
+    margin-left: 1.25vw;
+  }
+
+  @media screen and (max-width: 1200px){
+    margin-left: 2.5vw;
+  }
+
+  @include sm-block{
+    margin-left: 10px;
+  }
+
+  @include xs-block{
+    margin-left: 0;
+    border: 1px solid $border;
+    border-radius: $br;
+
+    width: 100%;
+    padding: 1vw;
+    margin-top: 10px;
+  }
+
+  & > p{
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 1.15;
+    margin: 5px 0;
+
+    @media screen and (min-width: 1921px){
+      font-size: .8vw;
+      margin: .25vw 0;
+    }
+
+    @media screen and (max-width: 1200px){
+      font-size: 1.6vw;
+      margin: .5vw 0;
+    }
+
+    @include sm-block{
+      font-size: 2.4vw;
+      margin: .75vw 0;
+    }
+
+    @include xs-block{
+      font-size: 3.5vw;
+      margin: 1vw 0;
+    }
+
+    & > span {
+      color: rgb(150, 41, 41);
+      font-size: 16px;
+      
+      @media screen and (min-width: 1921px){
+        font-size: .8vw;
+      }
+
+      @media screen and (max-width: 1200px){
+        font-size: 1.6vw;
+      }
+
+      @include sm-block{
+        font-size: 2.4vw;
+      }
+
+      @include xs-block{
+        font-size: 3.5vw;
+      }
+    }
+  }
+}
+
+.priceBlock{
+  margin-left: auto;
+  margin-right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+
+  @include sm-block{
+    border: 1px solid $border;
+    border-radius: $br;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 15px;
+  }
+
+  @include xs-block{
+    margin-top: 10px;
+    padding: 1vw;
+  }
+
+  & > *{
+    margin: 15px 0;
+
+    @media screen and (min-width: 1921px){
+      margin: .75vw 0;
+    }
+
+    @media screen and (max-width: 1200px){
+      margin: 1.5vw 0;
+    }
+
+    @include sm-block{
+      margin: 2.25vw 0;
+    }
+
+    @include xs-block{
+      margin: 0;
+    }
+  }
+
+  & > p {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+    text-align: right;
+
+    @media screen and (min-width: 1921px){
+      font-size: .75vw;
+    }
+
+    @media screen and (max-width: 1200px){
+      font-size: 1.5vw;
+    }
+
+    @include sm-block{
+      font-size: 2.7vw;
+    }
+
+    @include xs-block{
+      font-size: 3.5vw;
+    }
+
+    & > span{
+      // font-size: .8vw;
+      font-size: 14px;
+      color: black;
+      font-style: italic;
+      font-weight: 400;
+
+      @media screen and (min-width: 1921px){
+        font-size: .7vw;
+      }
+
+      @media screen and (max-width: 1200px){
+        font-size: 1.4vw;
+      }
+
+      @include sm-block{
+        font-size: 2.3vw;
+      }
+
+      @include xs-block{
+        font-size: 2.8vw;
+      }
+    }
+  }
+}
+
+.counter{
+  text-align: center;
+}
+
+.counterHide{
+  visibility: hidden;
+}
+
+.about{
+  @extend .layout;
+
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 1.3;
+
+  @media screen and (min-width: 1921px){
+    font-size: .8vw;
+  }
+
+  @media screen and (max-width: 1200px){
+    font-size: 1.6vw;
+  }
+
+  @include sm-block{
+    font-size: 2.4vw;
+  }
+
+  @include xs-block{
+    padding: 2vw;
+    font-size: 3.5vw;
+  }
+
+  & > *{
+    margin: 0;
+  }
+}
+
+.aboutTitle{
+  font-family: sans-serif;
+  font-size: 22px;
+  text-transform: uppercase;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 15px;
+
+  @media screen and (min-width: 1921px){
+    font-size: 1.1vw;
+    margin-bottom: .75vw;
+  }
+
+  @media screen and (max-width: 1200px){
+    font-size: 2vw;
+    margin-bottom: 1.5vw;
+  }
+
+  @include sm-block{
+    font-size: 2.5vw;
+    margin-bottom: 2.25vw;
+  }
+
+  @include xs-block{
+    font-size: 4vw;
+    margin-bottom: 10px;
+  }
+}
