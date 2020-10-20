@@ -4,7 +4,9 @@ import {
   REMOVE_FROM_CART_REQUEST,
   REMOVE_FROM_CART_SUCCESS,
   CHANGE_CNT_REQUEST,
-  CHANGE_CNT_SUCCESS
+  CHANGE_CNT_SUCCESS,
+  GET_DETAILED_PRODUCTS_REQUEST,
+  GET_DETAILED_PRODUCTS_SUCCESS
 } from '../actionTypes'
 
 export const initialState = {
@@ -21,6 +23,9 @@ export function cartReducer(state = initialState, action) {
       break
     case CHANGE_CNT_SUCCESS:
       return { ...state, products: action.payload }
+      break
+    case GET_DETAILED_PRODUCTS_SUCCESS:
+      return { ...state, products: { ...action.payload } }
       break
     default:
       return state

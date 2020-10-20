@@ -121,27 +121,38 @@ class App extends React.Component {
                 <NavLink
                   className={moduleStyles.menu__a}
                   to={routesMap.cart}
-                  activeClassName={moduleStyles.activeLink}><li className={moduleStyles.menu__li}
+                  activeClassName={moduleStyles.activeLink}>
+                  <li
+                    className={moduleStyles.menu__li}
                     onClick={this.hideMobMenu}>
                     Корзина</li>
                 </NavLink>
                 <NavLink
                   className={moduleStyles.menu__a}
                   to={routesMap.televisions}
-                  activeClassName={moduleStyles.activeLink}><li className={moduleStyles.menu__li}
-                    onClick={this.hideMobMenu}>Телевизоры</li>
+                  activeClassName={moduleStyles.activeLink}>
+                  <li
+                    className={moduleStyles.menu__li}
+                    onClick={this.hideMobMenu}>
+                    Телевизоры</li>
                 </NavLink>
                 <NavLink
                   className={moduleStyles.menu__a}
                   to={routesMap.phones}
-                  activeClassName={moduleStyles.activeLink}><li className={moduleStyles.menu__li}
-                    onClick={this.hideMobMenu}>Телефоны</li>
+                  activeClassName={moduleStyles.activeLink}>
+                  <li c
+                    lassName={moduleStyles.menu__li}
+                    onClick={this.hideMobMenu}>
+                    Телефоны</li>
                 </NavLink>
                 <NavLink
                   className={moduleStyles.menu__a}
                   to={routesMap.tablets}
-                  activeClassName={moduleStyles.activeLink}><li className={moduleStyles.menu__li}
-                    onClick={this.hideMobMenu}>Планшеты</li>
+                  activeClassName={moduleStyles.activeLink}>
+                  <li
+                    className={moduleStyles.menu__li}
+                    onClick={this.hideMobMenu}>
+                    Планшеты</li>
                 </NavLink>
               </ul>
             </menu>

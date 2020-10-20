@@ -24,12 +24,6 @@ import moduleStyles from './tv.module.scss'
 
 
 function TvPage(props) {
-  /* из CartStore нужно */
-  // 	-inCart()
-  // 	-addToCart()
-  // 	-removeFromCart()
-  // 	-changeAmount()
-  // 	-products
   console.log('tv page')
 
   const dispatch = useDispatch()
@@ -39,7 +33,7 @@ function TvPage(props) {
   const labels = tvsState._labels
   const filters = tvsState.filters
 
-  const cartState = useSelector(state => state.cart)
+  const cartStore = useSelector(state => state.cart)
 
   const inCart = (store, id) => {
     return id in store.products
@@ -52,9 +46,10 @@ function TvPage(props) {
   }, [])
 
   const products = tvs.map(tv => {
+
     return <LineCard
       key={tv.id}
-      inCart={inCart(cartState, tv.id)}
+      inCart={inCart(cartStore, tv.id)}
       img={{
         path: `${baseUrlImgs}${tv.imgs[0]}`
       }}
@@ -70,15 +65,15 @@ function TvPage(props) {
       onClick={() => { props.history.push(urlBuilder('television', tv.id)) }}
       button={
         <BtnAddToCart
-          inCart={inCart(cartState, tv.id)}
-          onAdd={() => { dispatch(addToCartSuccess(cartState, tv.id)) }}
-          onRemove={() => { dispatch(removeFromCartSuccess(cartState, tv.id)) }}
+          inCart={inCart(cartStore, tv.id)}
+          onAdd={() => { dispatch(addToCartSuccess(cartStore, tv.id)) }}
+          onRemove={() => { dispatch(removeFromCartSuccess(cartStore, tv.id)) }}
         />
       }
       counter={<Counter
         max={tv.rest}
-        cnt={cartState.products[tv.id] ? cartState.products[tv.id].amount : 0}
-        onChange={(cnt) => { dispatch(changeAmountSuccess(cartState, tv.id, cnt)) }}
+        cnt={cartStore.products[tv.id] ? cartStore.products[tv.id].amount : 0}
+        onChange={(cnt) => { dispatch(changeAmountSuccess(cartStore, tv.id, cnt)) }}
         className={moduleStyles.counter} />
       }
     >
@@ -100,51 +95,3 @@ function TvPage(props) {
 }
 
 export default TvPage
-
-
-// //television store
-// const TVStore = props.rootStore.televisions
-
-// //get tvs from server
-// useEffect(() => {
-// 	TVStore.getTelevisions()
-// }, [])
-
-// //array with tvs
-// const TVs = TVStore.televisions
-// //cart store
-// const cart = props.rootStore.cart
-
-// const products = TVs.map(TV => {
-// 	return <LineCard
-// 		key={TV.id}
-// 		inCart={cart.inCart(TV.id)}
-// 		img={{
-// 			path: TVStore.urlToImg(TV.data().imgs[0])
-// 		}}
-// 		title={{
-// 			text: TV.data().title
-// 		}}
-// 		price={{
-// 			text: TV.data().price.toString()
-// 		}}
-// 		description={TV.data().description}
-// 		labels={TVStore.labels}
-// 		// onClick={() => { props.history.push(`/product/` + TV.id) }}
-// 		// onClick={() => { props.history.push('/product/' + TV.id) }}
-// 		onClick={() => { props.history.push(urlBuilder('television', TV.id)) }}
-// 		button={
-// 			<BtnAddToCart
-// 				inCart={cart.inCart(TV.id)}
-// 				onAdd={() => { cart.addToCart(TV.id) }}
-// 				onRemove={() => { cart.removeFromCart(TV.id) }} />
-// 		}
-// 		counter={<Counter
-// 			max={TV.data().rest}
-// 			cnt={cart.products[TV.id] ? cart.products[TV.id].amount : 0}
-// 			onChange={(cnt) => { cart.changeAmount(TV.id, cnt) }}
-// 			className={moduleStyles.counter} />
-// 		}
-// 	>
-// 	</LineCard>
-// })

@@ -10,6 +10,8 @@ import { getTelevisions, getTvById } from '../../serverApiModel/televisions'
 import {
   getTelevisionsRequest,
   getTelevisionsSuccess,
+  getTelevisionRequest,
+  getTelevisionSuccess,
   setFiltersRequest,
   setFiltersSuccess,
   filterRequest,
@@ -18,8 +20,9 @@ import {
 /* store */
 import store from '../store'
 
-export function* getTVsFromServerSageWatcher() {
+export function* televisionsSagaWatcher() {
   yield takeEvery(getTelevisionsRequest().type, getTVsFromServerSagaWorker)
+  yield takeEvery(getTelevisionRequest().type, getTVFromServerSagaWorker)
   yield takeEvery(SET_PRICE_RANGE_SUCCESS, setPriceRangeSagaWorker)
 }
 
@@ -28,6 +31,11 @@ function* getTVsFromServerSagaWorker() {
   const tvs = yield call(getTelevisions)
   yield put(getTelevisionsSuccess(tvs))
   yield put(setFiltersSuccess(store.getState().televisions))
+}
+
+function* getTVFromServerSagaWorker(action) {
+  const tv = yield call(getTvById, action.payload)
+  yield put(getTelevisionSuccess(tv))
 }
 
 function* setPriceRangeSagaWorker() {

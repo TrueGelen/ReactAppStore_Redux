@@ -15,6 +15,8 @@ import {
   REMOVE_FROM_CART_SUCCESS,
   GET_PRODUCTS_FROM_LOCALSTORAGE_REQUEST,
   GET_PRODUCTS_FROM_LOCALSTORAGE_SUCCESS,
+  GET_DETAILED_PRODUCTS_REQUEST,
+  GET_DETAILED_PRODUCTS_SUCCESS,
   CHANGE_CNT_REQUEST,
   CHANGE_CNT_SUCCESS
 } from '../actionTypes'
@@ -32,9 +34,10 @@ export function getTelevisionsSuccess(tvs) {
   }
 }
 
-export function getTelevisionRequest() {
+export function getTelevisionRequest(id) {
   return {
-    type: GET_TELEVISION_REQUEST
+    type: GET_TELEVISION_REQUEST,
+    payload: id
   }
 }
 
@@ -249,5 +252,18 @@ export function changeAmountSuccess(state, id, amount) {
       // type: REMOVE_FROM_CART_SUCCESS,
       // payload: state
     }
+  }
+}
+
+export function getDetailedProductsRequest() {
+  return {
+    type: GET_DETAILED_PRODUCTS_REQUEST
+  }
+}
+
+export function getDetailedProductsSuccess(products) {
+  return {
+    type: GET_DETAILED_PRODUCTS_SUCCESS,
+    payload: products
   }
 }

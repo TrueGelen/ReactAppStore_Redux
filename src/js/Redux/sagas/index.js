@@ -1,11 +1,13 @@
 /* libs */
 import { all, fork } from 'redux-saga/effects'
 /* sagas */
-import { getTVsFromServerSageWatcher } from './televisions'
+import { televisionsSagaWatcher } from './televisions'
+import { cartSagaWatcher } from './cart'
 
 export function* rootSaga() {
-	// yield console.log("rootSaga")
-	yield all([
-		getTVsFromServerSageWatcher()
-	])
+  // yield console.log("rootSaga")
+  yield all([
+    televisionsSagaWatcher(),
+    cartSagaWatcher()
+  ])
 }

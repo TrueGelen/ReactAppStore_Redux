@@ -7,7 +7,8 @@ import {
   FILTER_REQUEST,
   FILTER_SUCCESS,
   SET_PRICE_RANGE_REQUEST,
-  SET_PRICE_RANGE_SUCCESS
+  SET_PRICE_RANGE_SUCCESS,
+
 } from '../actionTypes'
 
 import { baseUrlImgs, productLabelsForStores } from '../constants'

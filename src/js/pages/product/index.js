@@ -1,9 +1,15 @@
 /* lib */
 import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 // import PropTypes from 'prop-types'
 
-/* helpers */
-// import withStore from '../../hocs/withStore'
+/* actionCreators */
+import {
+  getTelevisionRequest,
+  addToCartSuccess,
+  removeFromCartSuccess,
+  changeAmountSuccess
+} from '../../Redux/actionCreators'
 
 // /* components */
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
@@ -19,119 +25,119 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 
 /* code */
-function ProductPage({ button, ...props }) {
-	console.log('Page ProductPage')
+function ProductPage(props) {
+  console.log('Page ProductPage')
 
-	SwiperCore.use([Navigation, Pagination, Scrollbar]);
+  SwiperCore.use([Navigation, Pagination, Scrollbar]);
 
-	/* the same code also is in a component pagelayout1 in filters */
-	const storeMapForPage = {
-		televisions: "televisions",
-		phones: "phones",
-		tablets: "tablets"
-	}
-	const storeKey = props.match.path.substring(
-		props.match.path.indexOf("/") + 1, props.match.path.lastIndexOf("/")
-	)
+  /* the same code also is in a component pagelayout1 in filters */
+  const storeMapForPage = {
+    televisions: "televisions",
+    phones: "phones",
+    tablets: "tablets"
+  }
+  const storeKey = props.match.path.substring(
+    props.match.path.indexOf("/") + 1, props.match.path.lastIndexOf("/")
+  )
 
-	//product store
-	const store = props.rootStore[storeMapForPage[storeKey]]
+  //product store
+  // const store = props.rootStore[storeMapForPage[storeKey]]
+  const store = useSelector(state => state[storeMapForPage[storeKey]])
 
-	/*---- the same code also is in a component pagelayout1 in filters ---*/
+  /*---- the same code also is in a component pagelayout1 in filters ---*/
 
-	//cart store
-	const cart = props.rootStore.cart
+  const inCart = (store, id) => {
+    return id in store.products
+  }
 
-	const id = props.match.params.id
+  const dispatch = useDispatch()
 
-	const product = store.product !== null ? store.product : {}
+  //cart store
+  const cartStore = useSelector(state => state.cart)
 
-	// console.log(product.rest)
+  const id = props.match.params.id
 
-	//get product from server
-	useEffect(() => {
-		store.getProduct(id)
-	}, [])
+  // const product = store.product !== null ? store.product : {}
 
-	let arrDescription = []
+  //get product from server
+  useEffect(() => {
+    dispatch(getTelevisionRequest(id))
+  }, [])
 
-	for (let key in product.description) {
-		if (key !== 'about') {
-			let p = <p key={Math.random()}> {store.labels[key]}: <span>{product.description[key]}</span></p>
-			arrDescription.push(p)
-		}
-	}
 
-	let swiperSlides = Object.values({ ...product.imgs }).map((img) => {
-		console.log(img);
-		return < SwiperSlide
-			key={img}
-			className={moduleStyles.slide} >
-			<img src={`../${store.baseUrlImgs}${img}`} />
-		</SwiperSlide >
-	})
+  let arrDescription = []
 
-	return (
-		<>
-			<h1 className={`${mainStyles.borderRadiusBlock} ${moduleStyles.title}`}>{product.title}</h1>
+  let product = store.product !== null ? store.product : {}
 
-			<div className={moduleStyles.content}>
+  for (let key in product.description) {
+    if (key !== 'about') {
+      let p = <p key={store._labels[key]}> {store._labels[key]}: <span>{product.description[key]}</span></p>
+      arrDescription.push(p)
+    }
+  }
 
-				<Swiper className={moduleStyles.slider}
-					spaceBetween={0}
-					slidesPerView={1}
-					navigation
-					loop
-					pagination={{ clickable: true }}
-				// scrollbar={{ draggable: true }}
-				// onSlideChange={() => console.log('slide change')}
-				// onSwiper={(swiper) => console.log(swiper)}
-				>
-					{swiperSlides}
-					{/* <SwiperSlide className={moduleStyles.slide}>
+  let swiperSlides = Object.values({ ...product.imgs }).map((img) => {
+    return < SwiperSlide
+      key={img}
+      className={moduleStyles.slide} >
+      <img src={`../${store._baseUrlImgs}${img}`} />
+    </SwiperSlide >
+  })
+
+  return (
+    <>
+      <h1 className={`${mainStyles.borderRadiusBlock} ${moduleStyles.title}`}>{product.title}</h1>
+
+      <div className={moduleStyles.content}>
+
+        <Swiper className={moduleStyles.slider}
+          spaceBetween={0}
+          slidesPerView={1}
+          navigation
+          loop
+          pagination={{ clickable: true }}
+        // scrollbar={{ draggable: true }}
+        // onSlideChange={() => console.log('slide change')}
+        // onSwiper={(swiper) => console.log(swiper)}
+        >
+          {swiperSlides}
+          {/* <SwiperSlide className={moduleStyles.slide}>
             <img src={`../${store.baseUrlImgs}${{ ...product.imgs }[0]}`} />
           </SwiperSlide>
           <SwiperSlide className={moduleStyles.slide}>
             <img src={`../${store.baseUrlImgs}${{ ...product.imgs }[1]}`} />
           </SwiperSlide> */}
-				</Swiper>
+        </Swiper>
 
-				<div className={moduleStyles.description}>
-					{arrDescription}
-				</div>
+        <div className={moduleStyles.description}>
+          {arrDescription}
+        </div>
 
-				<div className={moduleStyles.priceBlock}>
-					<p><span>цена:</span> {product.price} <span>р.</span></p>
+        <div className={moduleStyles.priceBlock}>
+          <p><span>цена:</span> {product.price} <span>р.</span></p>
 
-					<Counter
-						className={`${moduleStyles.counter} ${!cart.inCart(product.id) && moduleStyles.counterHide}`}
-						max={product.rest}
-						cnt={cart.products[product.id] ? cart.products[product.id].amount : 0}
-						onChange={(cnt) => { cart.changeAmount(product.id, cnt) }} />
+          <Counter
+            className={`${moduleStyles.counter} ${!inCart(cartStore, product.id) && moduleStyles.counterHide}`}
+            max={product.rest}
+            cnt={cartStore.products[product.id] ? cartStore.products[product.id].amount : 0}
+            onChange={(cnt) => {
+              dispatch(changeAmountSuccess(cartStore, product.id, cnt))
+            }} />
 
 
-					<BtnAddToCart
-						inCart={cart.inCart(product.id)}
-						onAdd={() => { cart.addToCart(product.id) }}
-						onRemove={() => { cart.removeFromCart(product.id) }} />
-				</div>
-			</div>
+          <BtnAddToCart
+            inCart={inCart(cartStore, product.id)}
+            onAdd={() => { dispatch(addToCartSuccess(cartStore, product.id)) }}
+            onRemove={() => { dispatch(removeFromCartSuccess(cartStore, product.id)) }} />
+        </div>
+      </div>
 
-			<div className={`${moduleStyles.about}`}>
-				<p className={moduleStyles.aboutTitle}>О товаре</p>
-				<p>{product.description && product.description.about}</p>
-			</div>
-		</>
-	)
+      <div className={`${moduleStyles.about}`}>
+        <p className={moduleStyles.aboutTitle}>О товаре</p>
+        <p>{product.description && product.description.about}</p>
+      </div>
+    </>
+  )
 }
 
-// ProductPage.defaultProps = {
-//   button: null
-// }
-
-// ProductPage.propTypes = {
-//   button: PropTypes.node
-// }
-
 export default ProductPage
-// export default withStore(ProductPage)
