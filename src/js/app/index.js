@@ -3,13 +3,18 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Link, NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-/* helpers */
-// import withStore from '../hocs/withStore'
-import { routes, routesMap } from '../routes'
+/* components */
+import NoticeError from '../components/errors/notice'
 
 /* styles */
 import moduleStyles from './app.module.scss'
 import mainStyles from '../../scss/main.module.scss'
+
+/* other */
+import { routes, routesMap } from '../routes'
+import {
+  errorHide
+} from '../Redux/actionCreators'
 
 class App extends React.Component {
 
@@ -158,14 +163,27 @@ class App extends React.Component {
             </menu>
           }
 
+          {
+            this.props.errStore.isError && <NoticeError
+              text={this.props.errStore.errMessage}
+              onClose={this.props.hideError} />
+          }
+
         </>
       </Router >
     )
   }
 }
 
-const mapStateToProps = state => ({ cartStore: state.cart })
+const mapStateToProps = state => ({
+  cartStore: state.cart,
+  errStore: state.errStore
+})
 
-export default connect(mapStateToProps, null)(App)
+const mapDispatchToProps = dispatch => ({
+  hideError: () => { dispatch(errorHide()) }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
 // export default withStore(App)
 

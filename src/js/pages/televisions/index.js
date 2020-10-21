@@ -27,11 +27,11 @@ function TvPage(props) {
   console.log('tv page')
 
   const dispatch = useDispatch()
-  const tvsState = useSelector(state => state.televisions)
-  const tvs = tvsState.filteredTelevisions
-  const baseUrlImgs = tvsState._baseUrlImgs
-  const labels = tvsState._labels
-  const filters = tvsState.filters
+  const tvsStore = useSelector(state => state.televisions)
+  const tvs = tvsStore.filteredTelevisions
+  const baseUrlImgs = tvsStore._baseUrlImgs
+  const labels = tvsStore._labels
+  const filters = tvsStore.filters
 
   const cartStore = useSelector(state => state.cart)
 
@@ -46,7 +46,6 @@ function TvPage(props) {
   }, [])
 
   const products = tvs.map(tv => {
-
     return <LineCard
       key={tv.id}
       inCart={inCart(cartStore, tv.id)}
@@ -80,17 +79,21 @@ function TvPage(props) {
     </LineCard>
   })
 
-  return (< PageLayout
-    title={{ text: "Телевизоры" }
-    }
-    products={products}
-    filters={{ ...filters }}
-    filterLabels={labels}
-    onFilter={(parameter, value) => {
-      dispatch(filterSuccess(tvsState, parameter, value))
-    }}
-    onPriceFilter={(values) => { dispatch(setPriceRangeSuccess(filters, values)) }}
-  />
+  return (
+    <>
+      < PageLayout
+        title={{ text: "Телевизоры" }
+        }
+        products={products}
+        filters={{ ...filters }}
+        filterLabels={labels}
+        onFilter={(parameter, value) => {
+          dispatch(filterSuccess(tvsStore, parameter, value))
+        }}
+        onPriceFilter={(values) => { dispatch(setPriceRangeSuccess(filters, values)) }}
+        isLoading={tvsStore.isLoading}
+      />
+    </>
   )
 }
 

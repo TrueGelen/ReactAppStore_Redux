@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 /* components */
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
 import Counter from '../../components/inputs/minmax'
+import NoticeError from '../../components/errors/notice'
 
 /* styles */
 import moduleStyles from './cart.module.scss'
@@ -16,8 +17,8 @@ import {
   removeFromCartSuccess
 } from '../../Redux/actionCreators'
 
-function Cart(props) {
-  console.log('cart page')
+function CartPage(props) {
+  console.log('========cart page===========')
 
   const dispatch = useDispatch()
   const cartStore = useSelector(state => state.cart)
@@ -63,30 +64,32 @@ function Cart(props) {
   })
 
   return (
-    <div className={moduleStyles.tableContainer}>
-      <table className={moduleStyles.table}>
-        <thead>
-          <tr>
-            <td className={moduleStyles.td}>Наименование</td>
-            <td className={moduleStyles.td}>Цена за шт.</td>
-            {/* <td className={moduleStyles.td}>Кол-во</td> */}
-            <td className={moduleStyles.td}>Цена за все</td>
-            <td className={moduleStyles.td}>Изменить кол-во</td>
-            <td className={moduleStyles.td}>Удалить</td>
-          </tr>
-        </thead>
-        <tbody>
-          {products}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className={moduleStyles.td}>Общая цена:</td>
-            <td className={moduleStyles.td}>{`${total()} р.`}</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+    <>
+      <div className={moduleStyles.tableContainer} >
+        <table className={moduleStyles.table}>
+          <thead>
+            <tr>
+              <td className={moduleStyles.td}>Наименование</td>
+              <td className={moduleStyles.td}>Цена за шт.</td>
+              {/* <td className={moduleStyles.td}>Кол-во</td> */}
+              <td className={moduleStyles.td}>Цена за все</td>
+              <td className={moduleStyles.td}>Изменить кол-во</td>
+              <td className={moduleStyles.td}>Удалить</td>
+            </tr>
+          </thead>
+          <tbody>
+            {products}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td className={moduleStyles.td}>Общая цена:</td>
+              <td className={moduleStyles.td}>{`${isNaN(total()) ? 0 : total()} р.`}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div >
+    </>
   )
 }
 
-export default Cart
+export default CartPage

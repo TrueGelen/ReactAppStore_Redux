@@ -1,20 +1,24 @@
 import firebase from '../firebaseConfig/fbConfig'
 import collections from './collections'
 
-async function getTablets() {
-  let response = await firebase.firestore().collection(collections.tablets).get()
-
-  return response.docs
+async function getTablets(timeout = 8000) {
+  return new Promise((resolve, reject) => {
+    firebase.firestore().collection(collections.tablets).get()
+      .then(res => resolve(res.docs.map(prod => ({ id: prod.id, ...prod.data() }))))
+    setTimeout(reject, timeout)
+  })
 }
 
-async function getTabletById(id) {
-  try {
-    let product = await firebase.firestore().collection(collections.tablets).doc(id).get()
-    return product.exists ? product.data() : new Error('no such doc');
-  }
-  catch (err) {
-    console.log(err)
-  }
+async function getTabletById(id, timeout = 8000) {
+  return new Promise((resolve, reject) => {
+    firebase.firestore().collection(collections.tablets).doc(id).get()
+      .then(product => resolve(
+        product.exists ?
+          { id, ...product.data() }
+          : new Error('no such doc')
+      ))
+    setTimeout(reject, timeout)
+  })
 }
 
 export { getTablets, getTabletById }

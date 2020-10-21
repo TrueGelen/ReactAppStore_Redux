@@ -1,8 +1,12 @@
 /* lib */
-import React, { useState, Children } from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
+
+/* components */
 import Checkbox from '@material-ui/core/Checkbox';
 import Filters from '../../filtersOnProductPage'
+import LoadingSpinner from '../../loadingSpinner'
 
 /* styles */
 import moduleStyles from './styles.module.scss'
@@ -15,6 +19,7 @@ export default function PageLayout({
   filterLabels,
   onFilter,
   onPriceFilter,
+  isLoading,
   ...otherProps }) {
 
   const [mobFilters, setMobFilters] = useState(false)
@@ -80,6 +85,7 @@ export default function PageLayout({
         </div>
 
         <div className={moduleStyles.productsWrapper}>
+          {isLoading && <LoadingSpinner />}
           {products}
         </div>
 
@@ -98,7 +104,8 @@ PageLayout.defaultProps = {
   filters: null,
   filterLabels: null,
   onPriceFilter: () => { },
-  onFilter: () => { }
+  onFilter: () => { },
+  isLoading: false
 }
 
 PageLayout.propTypes = {
@@ -111,5 +118,6 @@ PageLayout.propTypes = {
   filters: PropTypes.object,
   filterLabels: PropTypes.object,
   onPriceFilter: PropTypes.func,
-  onFilter: PropTypes.func
+  onFilter: PropTypes.func,
+  isLoading: PropTypes.bool
 }

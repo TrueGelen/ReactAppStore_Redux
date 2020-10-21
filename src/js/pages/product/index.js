@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux'
 /* actionCreators */
 import {
   getTelevisionRequest,
+  getTabletsRequest,
+  getPhonesRequest,
   addToCartSuccess,
   removeFromCartSuccess,
   changeAmountSuccess
@@ -14,6 +16,7 @@ import {
 // /* components */
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
 import Counter from '../../components/inputs/minmax'
+import LoadingSpinner from '../../components/loadingSpinner'
 
 // /* styles */
 import moduleStyles from './styles.module.scss'
@@ -40,28 +43,28 @@ function ProductPage(props) {
     props.match.path.indexOf("/") + 1, props.match.path.lastIndexOf("/")
   )
 
-  //product store
-  // const store = props.rootStore[storeMapForPage[storeKey]]
+
   const store = useSelector(state => state[storeMapForPage[storeKey]])
+  const cartStore = useSelector(state => state.cart)
+  const dispatch = useDispatch()
 
   /*---- the same code also is in a component pagelayout1 in filters ---*/
 
   const inCart = (store, id) => {
     return id in store.products
   }
-
-  const dispatch = useDispatch()
-
-  //cart store
-  const cartStore = useSelector(state => state.cart)
-
   const id = props.match.params.id
-
-  // const product = store.product !== null ? store.product : {}
 
   //get product from server
   useEffect(() => {
-    dispatch(getTelevisionRequest(id))
+    console.log("use storeKey", storeKey)
+    console.log("use storeMapForPage.televisions", storeMapForPage.televisions)
+    if (storeKey === storeMapForPage.televisions)
+      dispatch(getTelevisionRequest(id))
+    else if (storeKey === storeMapForPage.tablets)
+      dispatch(getTabletsRequest(id))
+    else if (storeKey === storeMapForPage.phones)
+      dispatch(getPhonesRequest(id))
   }, [])
 
 
@@ -86,56 +89,67 @@ function ProductPage(props) {
 
   return (
     <>
-      <h1 className={`${mainStyles.borderRadiusBlock} ${moduleStyles.title}`}>{product.title}</h1>
+      <h1
+        className={`${mainStyles.borderRadiusBlock} ${moduleStyles.title}`}>
+        {product.title}
+      </h1>
 
-      <div className={moduleStyles.content}>
+      {store.isLoading ?
+        <LoadingSpinner />
+        :
+        <>
+          <div className={moduleStyles.content}>
 
-        <Swiper className={moduleStyles.slider}
-          spaceBetween={0}
-          slidesPerView={1}
-          navigation
-          loop
-          pagination={{ clickable: true }}
-        // scrollbar={{ draggable: true }}
-        // onSlideChange={() => console.log('slide change')}
-        // onSwiper={(swiper) => console.log(swiper)}
-        >
-          {swiperSlides}
-          {/* <SwiperSlide className={moduleStyles.slide}>
-            <img src={`../${store.baseUrlImgs}${{ ...product.imgs }[0]}`} />
-          </SwiperSlide>
-          <SwiperSlide className={moduleStyles.slide}>
-            <img src={`../${store.baseUrlImgs}${{ ...product.imgs }[1]}`} />
-          </SwiperSlide> */}
-        </Swiper>
+            <Swiper className={moduleStyles.slider}
+              spaceBetween={0}
+              slidesPerView={1}
+              navigation
+              loop
+              pagination={{ clickable: true }}
+            // scrollbar={{ draggable: true }}
+            // onSlideChange={() => console.log('slide change')}
+            // onSwiper={(swiper) => console.log(swiper)}
+            >
+              {swiperSlides}
+              {/* <SwiperSlide className={moduleStyles.slide}>
+    <img src={`../${store.baseUrlImgs}${{ ...product.imgs }[0]}`} />
+  </SwiperSlide>
+  <SwiperSlide className={moduleStyles.slide}>
+    <img src={`../${store.baseUrlImgs}${{ ...product.imgs }[1]}`} />
+  </SwiperSlide> */}
+            </Swiper>
 
-        <div className={moduleStyles.description}>
-          {arrDescription}
-        </div>
+            <div className={moduleStyles.description}>
+              {arrDescription}
+            </div>
 
-        <div className={moduleStyles.priceBlock}>
-          <p><span>цена:</span> {product.price} <span>р.</span></p>
+            <div className={moduleStyles.priceBlock}>
+              <p><span>цена:</span> {product.price} <span>р.</span></p>
 
-          <Counter
-            className={`${moduleStyles.counter} ${!inCart(cartStore, product.id) && moduleStyles.counterHide}`}
-            max={product.rest}
-            cnt={cartStore.products[product.id] ? cartStore.products[product.id].amount : 0}
-            onChange={(cnt) => {
-              dispatch(changeAmountSuccess(cartStore, product.id, cnt))
-            }} />
+              <Counter
+                className={`${moduleStyles.counter} ${!inCart(cartStore, product.id) && moduleStyles.counterHide}`}
+                max={product.rest}
+                cnt={cartStore.products[product.id] ? cartStore.products[product.id].amount : 0}
+                onChange={(cnt) => {
+                  dispatch(changeAmountSuccess(cartStore, product.id, cnt))
+                }} />
 
 
-          <BtnAddToCart
-            inCart={inCart(cartStore, product.id)}
-            onAdd={() => { dispatch(addToCartSuccess(cartStore, product.id)) }}
-            onRemove={() => { dispatch(removeFromCartSuccess(cartStore, product.id)) }} />
-        </div>
-      </div>
+              <BtnAddToCart
+                inCart={inCart(cartStore, product.id)}
+                onAdd={() => { dispatch(addToCartSuccess(cartStore, product.id)) }}
+                onRemove={() => { dispatch(removeFromCartSuccess(cartStore, product.id)) }} />
+            </div>
+          </div>
 
-      <div className={`${moduleStyles.about}`}>
-        <p className={moduleStyles.aboutTitle}>О товаре</p>
-        <p>{product.description && product.description.about}</p>
-      </div>
+          <div className={`${moduleStyles.about}`}>
+            <p className={moduleStyles.aboutTitle}>О товаре</p>
+            <p>{product.description && product.description.about}</p>
+          </div>
+        </>
+      }
+
+
     </>
   )
 }
