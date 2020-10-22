@@ -5,10 +5,12 @@ import { televisionsReducer } from '../reducers/televisionsReducer'
 import { cartReducer } from '../reducers/cartReducer'
 import { errorReducer } from '../reducers/errorReducer'
 import { tabletsReducer } from '../reducers/tabletsReducer'
+import { phonesReducer } from '../reducers/phonesReducer'
 
 export const rootReducer = combineReducers({
   televisions: televisionsReducer,
   cart: cartReducer,
   errStore: errorReducer,
-  tablets: tabletsReducer
+  tablets: tabletsReducer,
+  phones: phonesReducer
 })

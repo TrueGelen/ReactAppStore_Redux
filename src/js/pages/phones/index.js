@@ -1,73 +1,83 @@
 /* lib */
 import React, { useEffect } from 'react'
-
-/* helpers */
-import { urlBuilder } from '../../routes'
+import { useDispatch, useSelector } from 'react-redux'
 
 /* components */
 import PhoneCard from '../../components/productCard/phone'
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
 import PageLayout from '../../components/pageLayouts/layout2'
 
+/* helpers */
+import { urlBuilder } from '../../routes'
+import {
+  getPhonesRequest,
+  phonesFilterSuccess,
+  phonesSetPriceRangeSuccess,
+  addToCartSuccess,
+  removeFromCartSuccess
+} from '../../Redux/actionCreators'
+
 /* styles */
 import moduleStyles from './phones.module.scss'
 
 
 /* code */
-function phones(props) {
-	console.log('phones page')
+function PhonesPage(props) {
+  console.log('==========PhonesPage page========')
 
-	//phones store
-	const phoneStore = props.rootStore.phones
+  const dispatch = useDispatch()
+  const phonesStore = useSelector(state => state.phones)
+  const phones = phonesStore.filteredPhones
+  const baseUrlImgs = phonesStore._baseUrlImgs
+  const labels = phonesStore._labels
+  // const filters = phonesStore.filters
 
-	//get phones from server
-	useEffect(() => {
-		phoneStore.getPhones()
-	}, [])
+  const cartStore = useSelector(state => state.cart)
 
-	//array with phones
-	const phones = phoneStore.phones
-	//cart store
-	const cart = props.rootStore.cart
+  const inCart = (store, id) => {
+    return id in store.products
+  }
 
-	const products = phones.map(phone => {
-		return <PhoneCard
-			key={phone.id}
-			className={moduleStyles.cardStyles}
-			img={{
-				path: phoneStore.urlToImg(phone.data().imgs[0])
-			}}
-			title={{
-				text: phone.data().title
-			}}
-			price={{
-				text: phone.data().price.toString()
-			}}
-			onClick={() => { props.history.push(urlBuilder('phone', phone.id)) }}
-			button={<BtnAddToCart
-				inCart={cart.inCart(phone.id)}
-				onAdd={() => { cart.addToCart(phone.id) }}
-				onRemove={() => { cart.removeFromCart(phone.id) }} />}
-		>
-		</PhoneCard>
-	})
+  //get phones from server
+  useEffect(() => {
+    dispatch(getPhonesRequest())
+  }, [])
 
-	//to do it's to del later
-	const unrealChange = () => {
-		console.log('unrealCh')
-		props.rootStore.phones.phones.push('new')
-	}
+  const products = phones.map(phone => {
+    return <PhoneCard
+      key={phone.id}
+      className={moduleStyles.cardStyles}
+      img={{
+        path: `${baseUrlImgs}${phone.imgs[0]}`
+      }}
+      title={{
+        text: phone.title
+      }}
+      price={{
+        text: phone.price.toString()
+      }}
+      onClick={() => { props.history.push(urlBuilder('phone', phone.id)) }}
+      button={<BtnAddToCart
+        inCart={inCart(cartStore, phone.id)}
+        onAdd={() => { dispatch(addToCartSuccess(cartStore, phone.id)) }}
+        onRemove={() => { dispatch(removeFromCartSuccess(cartStore, phone.id)) }} />}
+    >
+    </PhoneCard>
+  })
 
-	return (
-		<PageLayout
-			title={{ text: "Телефоны" }}
-			products={products}
-			filters={{ ...phoneStore.filters }}
-			filterLabels={phoneStore.labels}
-			onFilter={phoneStore.filter}
-			onPriceFilter={phoneStore.rangeChanger}
-		/>
-	)
+  return (
+    <PageLayout
+      title={{ text: "Телефоны" }}
+      products={products}
+      filters={{ ...phonesStore.filters }}
+      filterLabels={labels}
+      onFilter={(parameter, value) => {
+        dispatch(phonesFilterSuccess(phonesStore, parameter, value))
+      }}
+      onPriceFilter={(values) => { dispatch(phonesSetPriceRangeSuccess(phonesStore.filters, values)) }}
+      isLoading={phonesStore.isLoading}
+    />
+  )
 }
 
-export default phones
+export default PhonesPage

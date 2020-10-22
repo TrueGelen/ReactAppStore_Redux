@@ -25,6 +25,19 @@ import {
   TABLETS_FILTER_SUCCESS,
   TABLETS_SET_PRICE_RANGE_REQUEST,
   TABLETS_SET_PRICE_RANGE_SUCCESS,
+  /* PHONES */
+  GET_PHONES_REQUEST,
+  GET_PHONES_SUCCESS,
+  GET_PHONES_FAIL,
+  GET_PHONE_REQUEST,
+  GET_PHONE_SUCCESS,
+  GET_PHONE_FAIL,
+  PHONES_SET_FILTERS_REQUEST,
+  PHONES_SET_FILTERS_SUCCESS,
+  PHONES_FILTER_REQUEST,
+  PHONES_FILTER_SUCCESS,
+  PHONES_SET_PRICE_RANGE_REQUEST,
+  PHONES_SET_PRICE_RANGE_SUCCESS,
   /* CART */
   ADD_TO_CART_REQUEST,
   ADD_TO_CART_SUCCESS,
@@ -47,10 +60,10 @@ export function getTelevisionsRequest() {
   }
 }
 
-export function getTelevisionsSuccess(tvs) {
+export function getTelevisionsSuccess(products) {
   return {
     type: GET_TELEVISIONS_SUCCESS,
-    payload: tvs
+    payload: products
   }
 }
 
@@ -67,10 +80,10 @@ export function getTelevisionRequest(id) {
   }
 }
 
-export function getTelevisionSuccess(tv) {
+export function getTelevisionSuccess(product) {
   return {
     type: GET_TELEVISION_SUCCESS,
-    payload: tv
+    payload: product
   }
 }
 
@@ -306,10 +319,10 @@ export function getTabletsRequest() {
   }
 }
 
-export function getTabletsSuccess(tvs) {
+export function getTabletsSuccess(products) {
   return {
     type: GET_TABLETS_SUCCESS,
-    payload: tvs
+    payload: products
   }
 }
 
@@ -326,10 +339,10 @@ export function getTabletRequest(id) {
   }
 }
 
-export function getTabletSuccess(tv) {
+export function getTabletSuccess(product) {
   return {
     type: GET_TABLET_SUCCESS,
-    payload: tv
+    payload: product
   }
 }
 
@@ -447,6 +460,158 @@ export function tabletsSetPriceRangeSuccess(filters = null, values = null) {
 
   return {
     type: TABLETS_SET_PRICE_RANGE_SUCCESS,
+    payload: copyFilters
+  }
+}
+
+/* PHONES */
+export function getPhonesRequest() {
+  return {
+    type: GET_PHONES_REQUEST
+  }
+}
+
+export function getPhonesSuccess(products) {
+  return {
+    type: GET_PHONES_SUCCESS,
+    payload: products
+  }
+}
+
+export function getPhonesFail() {
+  return {
+    type: GET_PHONES_FAIL
+  }
+}
+
+export function getPhoneRequest(id) {
+  return {
+    type: GET_PHONE_REQUEST,
+    payload: id
+  }
+}
+
+export function getPhoneSuccess(product) {
+  return {
+    type: GET_PHONE_SUCCESS,
+    payload: product
+  }
+}
+
+export function getPhoneFail() {
+  return {
+    type: GET_PHONE_FAIL
+  }
+}
+
+export function phonesSetFiltersRequest() {
+  return {
+    type: PHONES_SET_FILTERS_REQUEST
+  }
+}
+
+export function phonesSetFiltersSuccess(state) {
+  const phonesFromServer = state.phonesFromServer
+  const labels = state._labels
+  const filters = {
+    ...state.filters,
+    price:
+    {
+      ...state.filters.price,
+      range:
+        { ...state.filters.price.range }
+    }
+  }
+
+  for (let key in labels) {
+    if (key !== "about") {
+      //.map() - get all values by key and in Set we make it unique. Also find a max price
+      [...new Set(phonesFromServer.map(prod => {
+        filters.price.max = Math.max(filters.price.max, Number(prod.price))
+        filters.price.range.max = filters.price.max
+        return prod.description[key]
+      }))]
+        //by key we write new obj where key is unique value and value is boolean
+        .forEach(val => {
+          filters[key] = { ...filters[key], [val]: true }
+        })
+    }
+  }
+  return {
+    type: PHONES_SET_FILTERS_SUCCESS,
+    payload: filters
+  }
+}
+
+export function phonesFilterRequest() {
+  return {
+    type: PHONES_FILTER_REQUEST
+  }
+}
+
+export function phonesFilterSuccess(state = "undefined", parameter = "undefined", value = "undefined") {
+  // console.log("filter", state)
+  let filteredPhones = [...state.phonesFromServer]
+  let filters = {}
+
+  const spreadArray = (obj) => {
+    let newObj = { ...obj }
+
+    for (let key in obj) {
+      if (typeof newObj[key] === "object") {
+        newObj[key] = spreadArray(obj[key])
+      }
+    }
+    return newObj
+  }
+
+  for (let key in state.filters) {
+    if (typeof state.filters[key] === "object") {
+      filters[key] = spreadArray(state.filters[key])
+    } else if (Array.isArray(state.filters[key])) {
+      filters[key] = [...state.filters[key]]
+    } else {
+      filters[key] = state.filters[key]
+    }
+  }
+
+  if (parameter !== "undefined" && value !== "undefined") {
+    filters[parameter][value] = !filters[parameter][value]
+  }
+
+  for (let param in filters) {
+    filteredPhones = filteredPhones.filter(
+      tv => Object.keys(filters[param])
+        .some(val => {
+          if (param === "price") {
+            return filters.price.range.min <= tv.price && filters.price.range.max >= tv.price
+          } else {
+            return filters[param][val] && (val === tv.description[param].toString())
+          }
+        })
+    )
+  }
+  return {
+    type: PHONES_FILTER_SUCCESS,
+    payload: { filteredPhones, filters }
+  }
+}
+
+export function phonesSetPriceRangeRequest() {
+  return {
+    type: PHONES_SET_PRICE_RANGE_REQUEST
+  }
+}
+
+export function phonesSetPriceRangeSuccess(filters = null, values = null) {
+  // console.log("setPriceRange", filters, values)
+  let copyFilters = { ...filters, price: { ...filters.price } }
+  let range = { ...copyFilters.price.range }
+  range = { min: values[0], max: values[1] }
+  copyFilters.price = { ...copyFilters.price, range }
+
+  return {
+    type: PHONES_SET_PRICE_RANGE_SUCCESS,
     payload: copyFilters
   }
 }

@@ -2,6 +2,7 @@
 @import '../../../../scss/vars.scss';
 
 .productCard{
+  position: relative;
 	background-color: $lb;
 	text-align: center;
 	display: flex;

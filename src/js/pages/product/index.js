@@ -29,7 +29,7 @@ import 'swiper/swiper-bundle.css';
 
 /* code */
 function ProductPage(props) {
-  console.log('Page ProductPage')
+  console.log('====Page ProductPage====')
 
   SwiperCore.use([Navigation, Pagination, Scrollbar]);
 
