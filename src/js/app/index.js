@@ -163,11 +163,11 @@ class App extends React.Component {
             </menu>
           }
 
-          {
-            this.props.errStore.isError && <NoticeError
-              text={this.props.errStore.errMessage}
-              onClose={this.props.hideError} />
-          }
+          <NoticeError
+            text={this.props.errStore.errMessage}
+            onClose={this.props.hideError}
+            isError={this.props.errStore.isError}
+          />
 
         </>
       </Router >

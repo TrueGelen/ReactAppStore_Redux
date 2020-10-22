@@ -1,23 +1,17 @@
 /* lib */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 /* styles */
 import moduleStyles from './styles.module.scss'
 
 /* code */
-export default function NoticeError({ text, onClose, ...props }) {
+export default function NoticeError({ text, onClose, isError, ...props }) {
 
   let errMessage = text === '' ? 'Ошибка не передана или не известна!' : text
 
-  let [show, setShow] = useState(false)
-
-  useEffect(() => {
-    setShow(true)
-  }, [])
-
   return (
-    <div className={`${moduleStyles.errorLayout} ${show && moduleStyles.show}`}>
+    <div className={`${moduleStyles.errorLayout} ${isError && moduleStyles.show}`}>
       <div
         className={moduleStyles.close}
         onClick={onClose}
