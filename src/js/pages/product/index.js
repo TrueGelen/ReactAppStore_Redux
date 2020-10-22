@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from 'react-redux'
 /* actionCreators */
 import {
   getTelevisionRequest,
-  getTabletsRequest,
-  getPhonesRequest,
+  getTabletRequest,
+  getPhoneRequest,
   addToCartSuccess,
   removeFromCartSuccess,
   changeAmountSuccess
@@ -57,14 +57,12 @@ function ProductPage(props) {
 
   //get product from server
   useEffect(() => {
-    console.log("use storeKey", storeKey)
-    console.log("use storeMapForPage.televisions", storeMapForPage.televisions)
     if (storeKey === storeMapForPage.televisions)
       dispatch(getTelevisionRequest(id))
     else if (storeKey === storeMapForPage.tablets)
-      dispatch(getTabletsRequest(id))
+      dispatch(getTabletRequest(id))
     else if (storeKey === storeMapForPage.phones)
-      dispatch(getPhonesRequest(id))
+      dispatch(getPhoneRequest(id))
   }, [])
 
 

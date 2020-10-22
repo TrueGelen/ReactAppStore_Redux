@@ -1,5 +1,5 @@
-export const baseUrlAssets = 'ReactAppStore/dist/'
-// export const baseUrlAssets = '/'
+// export const baseUrlAssets = 'ReactAppStore/dist/'
+export const baseUrlAssets = '/'
 //dev base url
 export const baseUrlImgs = {
   phones: `${baseUrlAssets}assets/imgs/phones/`,
