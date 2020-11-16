@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import md from './index.module.scss'
@@ -43,7 +43,7 @@ function BtnAddToCart({
   )
 }
 
-export default memo(BtnAddToCart)
+export default BtnAddToCart
 
 BtnAddToCart.defaultProps = {
   className: undefined,
