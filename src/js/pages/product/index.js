@@ -15,7 +15,7 @@ import {
 
 // /* components */
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
-import Counter from '../../components/inputs/minmax'
+import Counter from '../../components/inputs/counter'
 import LoadingSpinner from '../../components/loadingSpinner'
 
 // /* styles */
@@ -29,7 +29,7 @@ import 'swiper/swiper-bundle.css';
 
 /* code */
 function ProductPage(props) {
-  console.log('====Page ProductPage====')
+  // console.log('====Page ProductPage====')
 
   SwiperCore.use([Navigation, Pagination, Scrollbar]);
 

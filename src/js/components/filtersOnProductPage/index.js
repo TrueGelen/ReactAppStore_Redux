@@ -1,13 +1,13 @@
 /* lib */
-import React from 'react'
+import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '@material-ui/core/Checkbox';
 import LabeledTwoThumbs from '../range';
 
 /* styles */
-import moduleStyles from './styles.module.scss'
+import md from './styles.module.scss'
 
-export default function Filters({
+function Filters({
   className,
   filters,
   filterLabels,
@@ -15,7 +15,7 @@ export default function Filters({
   onPriceFilter,
   onCloseMobFilters,
   isMobFilterOpen,
-  ...otherProps }) {
+  ...props }) {
 
   // const [mobFilters, setMobFilters] = useState(false)
 
@@ -25,14 +25,14 @@ export default function Filters({
     if (key !== "price") {
       checkboxes.push(
         <div key={key}
-          className={moduleStyles.filterWrap}>
-          <h4 className={moduleStyles.filterTitle}>{filterLabels[key]}</h4>
-          <div className={moduleStyles.filterBlock}>
+          className={md.filterWrap}>
+          <h4 className={md.filterTitle}>{filterLabels[key]}</h4>
+          <div className={md.filterBlock}>
             {
               Object.keys({ ...filters[key] }).map(val => {
                 return (
                   <div key={val}
-                    className={moduleStyles.checkBoxFilter}>
+                    className={md.checkBoxFilter}>
                     <Checkbox
                       checked={filters[key][val]}
                       color="primary"
@@ -54,28 +54,28 @@ export default function Filters({
     <>
       <div
         className={isMobFilterOpen ?
-          `${moduleStyles.filtersWrapper} ${moduleStyles.filtersWrapper_mob}`
+          `${md.filtersWrapper} ${md.filtersWrapper_mob}`
           :
-          moduleStyles.filtersWrapper}>
+          md.filtersWrapper}>
 
-        <div className={moduleStyles.filtersWrapper__closeMobFilters}
+        <div className={md.filtersWrapper__closeMobFilters}
           onClick={onCloseMobFilters}>
           <div></div>
           <div></div>
         </div>
 
-        <p className={moduleStyles.title}>Фильтры</p>
-        <div className={moduleStyles.filters}>
+        <p className={md.title}>Фильтры</p>
+        <div className={md.filters}>
           <div>
             {checkboxes}
-            <div className={moduleStyles.filterWrap}>
+            <div className={md.filterWrap}>
               <h4
-                className={`${moduleStyles.filterTitle} ${moduleStyles.filterTitle_price}`}>
+                className={`${md.filterTitle} ${md.filterTitle_price}`}>
                 Цена
                 </h4>
-              <div className={moduleStyles.filterBlock}>
+              <div className={md.filterBlock}>
                 <LabeledTwoThumbs
-                  className={moduleStyles.rangeSlider}
+                  className={md.rangeSlider}
                   min={filters.price.min}
                   max={filters.price.max}
                   step={1000}
@@ -89,6 +89,8 @@ export default function Filters({
     </>
   )
 }
+
+export default memo(Filters)
 
 Filters.defaultProps = {
   className: undefined,

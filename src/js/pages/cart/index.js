@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 /* components */
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
-import Counter from '../../components/inputs/minmax'
+import Counter from '../../components/inputs/counter'
 import NoticeError from '../../components/errors/notice'
 
 /* styles */
@@ -18,8 +18,6 @@ import {
 } from '../../Redux/actionCreators'
 
 function CartPage(props) {
-  console.log('========cart page===========')
-
   const dispatch = useDispatch()
   const cartStore = useSelector(state => state.cart)
   useEffect(() => {

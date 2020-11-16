@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 /* components */
 import LineCard from '../../components/productCard/lineCard'
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
-import Counter from '../../components/inputs/minmax'
+import Counter from '../../components/inputs/counter'
 import PageLayout from '../../components/pageLayouts/layout1'
 
 /* helpers */
@@ -23,7 +23,7 @@ import {
 import moduleStyles from './tablet.module.scss'
 
 function TabletsPage(props) {
-  console.log('======Tablets page=======')
+  // console.log('======Tablets page=======')
 
   const dispatch = useDispatch()
   const tabletsStore = useSelector(state => state.tablets)

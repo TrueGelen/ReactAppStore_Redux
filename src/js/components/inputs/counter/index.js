@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /* styles */
-import LazyInp from '../lazy';
+import LazyInp from '../lazyInput';
 import moduleStyles from './styles.module.scss';
 
 export default class extends React.PureComponent {
@@ -47,7 +47,7 @@ export default class extends React.PureComponent {
   }
 
   render() {
-    console.log('minmax render');
+    // console.log('minmax render');
     return (
       <div className={`${moduleStyles.counter} ${this.props.className}`}>
         <div

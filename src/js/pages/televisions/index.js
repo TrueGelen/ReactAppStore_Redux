@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 /* components */
 import LineCard from '../../components/productCard/lineCard'
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
-import Counter from '../../components/inputs/minmax'
+import Counter from '../../components/inputs/counter'
 import PageLayout from '../../components/pageLayouts/layout1'
 
 /* other */
@@ -20,12 +20,10 @@ import {
 } from '../../Redux/actionCreators'
 
 /* styles */
-import moduleStyles from './tv.module.scss'
+import md from './tv.module.scss'
 
 
 function TvPage(props) {
-  console.log('tv page')
-
   const dispatch = useDispatch()
   const tvsStore = useSelector(state => state.televisions)
   const tvs = tvsStore.filteredTelevisions
@@ -60,7 +58,6 @@ function TvPage(props) {
       }}
       description={tv.description}
       labels={labels}
-      // onClick={() => { props.history.push(`/product/` + tv.id) }}
       onClick={() => { props.history.push(urlBuilder('television', tv.id)) }}
       button={
         <BtnAddToCart
@@ -73,7 +70,7 @@ function TvPage(props) {
         max={tv.rest}
         cnt={cartStore.products[tv.id] ? cartStore.products[tv.id].amount : 0}
         onChange={(cnt) => { dispatch(changeAmountSuccess(cartStore, tv.id, cnt)) }}
-        className={moduleStyles.counter} />
+        className={md.counter} />
       }
     >
     </LineCard>

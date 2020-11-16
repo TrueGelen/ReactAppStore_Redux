@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 
-import moduleStyles from './index.module.scss'
+import md from './index.module.scss'
 
-export default function BtnAddToCart({
+function BtnAddToCart({
   className,
   onAdd,
   onRemove,
@@ -22,27 +22,28 @@ export default function BtnAddToCart({
     onRemove()
   }
 
-  return (
-    inCart ?
-      <div {...otherProps}
-        className={`${moduleStyles.noselect}
-				${moduleStyles.mainStyles}
-        ${moduleStyles.inCart}
+  return (inCart ?
+    <div {...otherProps}
+      className={`${md.noselect}
+				${md.mainStyles}
+        ${md.inCart}
         ${className && className}`}
-        onClick={remove}>
-        {innerOnRemove}
-      </div>
-      :
-      <div {...otherProps}
-        className={`${moduleStyles.noselect}
-				${moduleStyles.mainStyles}
-				${moduleStyles.nonInCart}
+      onClick={remove}>
+      {innerOnRemove}
+    </div>
+    :
+    <div {...otherProps}
+      className={`${md.noselect}
+				${md.mainStyles}
+				${md.nonInCart}
 				${className && className}`}
-        onClick={add}>
-        {innerOnAdd}
-      </div>
+      onClick={add}>
+      {innerOnAdd}
+    </div>
   )
 }
+
+export default memo(BtnAddToCart)
 
 BtnAddToCart.defaultProps = {
   className: undefined,
