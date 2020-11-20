@@ -18,6 +18,9 @@ export function cartReducer(state = initialState, action) {
     case ADD_TO_CART_SUCCESS:
       return { ...state, products: action.payload }
       break
+    case ADD_TO_CART_SUCCESS:
+      return addToCartSuccess(state, action)
+      break
     case REMOVE_FROM_CART_SUCCESS:
       return { ...state, products: action.payload }
       break
@@ -32,3 +35,8 @@ export function cartReducer(state = initialState, action) {
       break;
   }
 }
+// const addToCartSuccess = (state, action) => {
+//   console.log("reducer state:", state)
+
+//   return { ...state, products: action.payload }
+// }

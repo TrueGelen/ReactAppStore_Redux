@@ -1,13 +1,11 @@
 /* lib */
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
+import React, { useEffect, useMemo } from 'react'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 /* components */
 import LineCard from '../../components/productCard/lineCard'
 import BtnAddToCart from '../../components/buttons/btnAddToCart'
 import Counter from '../../components/inputs/counter'
 import PageLayout from '../../components/pageLayouts/layout1'
-
 /* other */
 import { urlBuilder } from '../../routes'
 import {
@@ -18,7 +16,6 @@ import {
   removeFromCartSuccess,
   changeAmountSuccess
 } from '../../Redux/actionCreators'
-
 /* styles */
 import md from './tv.module.scss'
 
@@ -32,9 +29,9 @@ function TvPage(props) {
   const filters = tvsStore.filters
 
   const cartStore = useSelector(state => state.cart)
-
-  const inCart = (store, id) => {
-    return id in store.products
+  const store = useStore()
+  const inCart = (id) => {
+    return id in store.getState().cart.products
   }
 
   //get tvs from server
@@ -43,38 +40,18 @@ function TvPage(props) {
     dispatch(getTelevisionsRequest())
   }, [])
 
-  const products = tvs.map(tv => {
-    return <LineCard
-      key={tv.id}
-      inCart={inCart(cartStore, tv.id)}
-      img={{
-        path: `${baseUrlImgs}${tv.imgs[0]}`
-      }}
-      title={{
-        text: tv.title
-      }}
-      price={{
-        text: tv.price.toString()
-      }}
-      description={tv.description}
-      labels={labels}
-      onClick={() => { props.history.push(urlBuilder('television', tv.id)) }}
-      button={
-        <BtnAddToCart
-          inCart={inCart(cartStore, tv.id)}
-          onAdd={() => { dispatch(addToCartSuccess(cartStore, tv.id)) }}
-          onRemove={() => { dispatch(removeFromCartSuccess(cartStore, tv.id)) }}
-        />
-      }
-      counter={<Counter
-        max={tv.rest}
-        cnt={cartStore.products[tv.id] ? cartStore.products[tv.id].amount : 0}
-        onChange={(cnt) => { dispatch(changeAmountSuccess(cartStore, tv.id, cnt)) }}
-        className={md.counter} />
-      }
-    >
-    </LineCard>
-  })
+  const products = useMemo(() => {
+    console.log("useMemo products")
+    return tvs.map(tv => {
+      const goToProduct = () => props.history.push(urlBuilder('television', tv.id))
+      return <LineCard
+        key={tv.id}
+        product={tv}
+        baseUrlImgs={baseUrlImgs}
+        labels={labels}
+        onClick={goToProduct} />
+    })
+  }, [tvsStore.filteredTelevisions.length])
 
   return (
     <>

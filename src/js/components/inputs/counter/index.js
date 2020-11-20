@@ -50,6 +50,7 @@ export default class extends React.PureComponent {
     // console.log('minmax render');
     return (
       <div className={`${moduleStyles.counter} ${this.props.className}`}>
+        {console.log("======counter=======")}
         <div
           className={this.props.min >= Number(this.props.cnt) ? `${moduleStyles.button} ${moduleStyles.minus} ${moduleStyles.disabled}` :
             `${moduleStyles.button} ${moduleStyles.minus}`}

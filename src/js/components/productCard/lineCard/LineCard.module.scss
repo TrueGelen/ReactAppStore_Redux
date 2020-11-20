@@ -268,3 +268,10 @@
     }
   }
 }
+
+.counter{
+  align-self: center;
+  transform: translateY(80%);
+
+  @include xs(transform, none);
+}
