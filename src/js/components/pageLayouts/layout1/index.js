@@ -1,91 +1,100 @@
-/* lib */
-import React, { useState } from 'react'
+/* libs */
+import React, { useState, useMemo } from 'react'
+import { withRouter } from "react-router";
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-
 /* components */
-import Checkbox from '@material-ui/core/Checkbox';
 import Filters from '../../filtersOnProductPage'
 import LoadingSpinner from '../../loadingSpinner'
-
+import LineCard from '../../productCard/lineCard'
+/* other */
+import { urlBuilder, routesMap } from '../../../routes'
+import {
+  filterSuccess,
+  setPriceRangeSuccess,
+  tabletsFilterSuccess,
+  tabletsSetPriceRangeSuccess,
+} from '../../../Redux/actionCreators'
 /* styles */
-import moduleStyles from './styles.module.scss'
+import md from './styles.module.scss'
 
-export default function PageLayout({
+function PageLayout({
   className,
   title,
-  products,
-  filters,
-  filterLabels,
-  onFilter,
-  onPriceFilter,
-  isLoading,
+  store,
   ...props }) {
-
+  const dispatch = useDispatch()
   const [mobFilters, setMobFilters] = useState(false)
+  const openMobFilters = () => setMobFilters(true)
+  const hideMobFilters = () => setMobFilters(false)
 
-  const openMobFilters = () => {
-    setMobFilters(true)
+  const _productStore = store
+  const _products = _productStore.filteredProducts
+  const baseUrlImgs = _productStore._baseUrlImgs
+  const _labels = _productStore._labels
+  const filters = useMemo(() => ({ ..._productStore.filters }), [_productStore.filters])
+  let isLoading = _productStore.isLoading
+
+  const actions = (() => {
+    const p = props.location.pathname
+    let resObj = { fs: null, spr: null }
+    if (p === routesMap.televisions)
+      resObj = { fs: filterSuccess, spr: setPriceRangeSuccess }
+    if (p === routesMap.tablets)
+      resObj = { fs: tabletsFilterSuccess, spr: tabletsSetPriceRangeSuccess }
+    return resObj
+  })()
+
+  const actionFilterSuccess = actions.fs
+  const actionSetPriceRangeSuccess = actions.spr
+
+  const getNameForSinglePage = () => {
+    const p = props.location.pathname
+    if (p === routesMap.televisions)
+      return "television"
+    if (p === routesMap.tablets)
+      return "tablet"
   }
+  const singleProductPage = getNameForSinglePage()
+  const productNodeElements = useMemo(() => {
+    return _products.map(product => {
+      const goToProduct = () => props.history.push(urlBuilder(singleProductPage, product.id))
+      return <LineCard
+        key={product.id}
+        product={product}
+        baseUrlImgs={baseUrlImgs}
+        labels={_labels}
+        onClick={goToProduct} />
+    })
+  }, [_productStore.filteredProducts])
 
-  const hideMobFilters = () => {
-    setMobFilters(false)
-  }
-
-  let checkboxes = []
-
-  for (let key in filters) {
-    if (key !== "price") {
-      checkboxes.push(
-        <div key={key}
-          className={moduleStyles.filterWrap}>
-          <h4 className={moduleStyles.filterTitle}>{filterLabels[key]}</h4>
-          <div className={moduleStyles.filterBlock}>
-            {
-              Object.keys({ ...filters[key] }).map(val => {
-                return (
-                  <div key={val}
-                    className={moduleStyles.checkBoxFilter}>
-                    <Checkbox
-                      checked={filters[key][val]}
-                      color="primary"
-                      inputProps={{ 'aria-label': 'secondary checkbox' }}
-                      onChange={(e) => { onFilter(key, val) }}
-                    />
-                    <p>{val}</p>
-                  </div>
-                )
-              })
-            }
-          </div>
-        </div>
-      )
-    }
-  }
+  const onFilter = (parameter, value) => dispatch(actionFilterSuccess(_productStore, parameter, value))
+  const onPriceFilter = (values) => dispatch(actionSetPriceRangeSuccess(filters, values))
 
   return (
     <>
-      <h1 className={` ${moduleStyles.title}`}>{title.text}</h1>
+      {/* {console.log("========PageLayout======")} */}
+      <h1 className={` ${md.title}`}>{title}</h1>
 
-      <div className={moduleStyles.pageWrapper}>
+      <div className={md.pageWrapper}>
 
         <Filters
           filters={filters}
-          filterLabels={filterLabels}
+          filterLabels={_labels}
           onFilter={onFilter}
           onPriceFilter={onPriceFilter}
           isMobFilterOpen={mobFilters}
-          onCloseMobFilters={hideMobFilters}
-        />
+          onCloseMobFilters={hideMobFilters} />
 
         <div
-          className={moduleStyles.filterButton}
+          className={md.filterButton}
           onClick={openMobFilters}>
           <p>Фильтры</p>
         </div>
 
-        <div className={moduleStyles.productsWrapper}>
+        <div className={md.productsWrapper}>
           {isLoading && <LoadingSpinner />}
-          {products}
+          {productNodeElements}
         </div>
 
       </div>
@@ -93,30 +102,15 @@ export default function PageLayout({
   )
 }
 
+export default withRouter(PageLayout)
+
 PageLayout.defaultProps = {
   className: undefined,
-  title: {
-    styles: null,
-    text: null
-  },
-  products: null,
-  filters: null,
-  filterLabels: null,
-  onPriceFilter: () => { },
-  onFilter: () => { },
-  isLoading: false
+  title: "Товары"
 }
 
 PageLayout.propTypes = {
   className: PropTypes.string,
-  title: PropTypes.shape({
-    styles: PropTypes.string,
-    text: PropTypes.string
-  }),
-  products: PropTypes.arrayOf(PropTypes.node),
-  filters: PropTypes.object,
-  filterLabels: PropTypes.object,
-  onPriceFilter: PropTypes.func,
-  onFilter: PropTypes.func,
-  isLoading: PropTypes.bool
+  title: PropTypes.string,
+  store: PropTypes.object.isRequired
 }

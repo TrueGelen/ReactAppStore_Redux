@@ -3,7 +3,7 @@ import React from 'react';
 import { Range, getTrackBackground } from 'react-range';
 
 /* styles */
-import moduleStyles from './styles.module.scss'
+import md from './styles.module.scss'
 
 class LabeledTwoThumbs extends React.Component {
 
@@ -11,7 +11,7 @@ class LabeledTwoThumbs extends React.Component {
     values: [this.props.min, this.props.max]
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     if (this.props.max != nextProps.max || this.props.min != nextProps.min)
       this.setState({ values: [nextProps.min, nextProps.max] })
 
@@ -26,7 +26,7 @@ class LabeledTwoThumbs extends React.Component {
   render() {
     return (
       <div
-        className={`${moduleStyles.range} ${this.props.className}`}
+        className={`${md.range} ${this.props.className}`}
       /* style={{
         display: 'flex',
         justifyContent: 'center',
@@ -42,7 +42,7 @@ class LabeledTwoThumbs extends React.Component {
           onChange={this.valuesChanger}
           renderTrack={({ props, children }) => (
             <div
-              className={moduleStyles.rageTube}
+              className={md.rageTube}
               onMouseDown={props.onMouseDown}
               onTouchStart={props.onTouchStart}
               style={{
@@ -54,7 +54,7 @@ class LabeledTwoThumbs extends React.Component {
             >
               <div
                 ref={props.ref}
-                className={moduleStyles.rageLine}
+                className={md.rageLine}
                 style={{
                   /* height: '5px',
                   width: '100%',
@@ -74,7 +74,7 @@ class LabeledTwoThumbs extends React.Component {
           )}
           renderThumb={({ index, props, isDragged }) => (
             <div
-              className={moduleStyles.thumb}
+              className={md.thumb}
               {...props}
               style={{
                 ...props.style,
@@ -89,7 +89,7 @@ class LabeledTwoThumbs extends React.Component {
               }}
             >
               <div
-                className={moduleStyles.thumbLabel}
+                className={md.thumbLabel}
                 style={{
                   /* position: 'absolute',
                   top: '-28px',
@@ -105,7 +105,7 @@ class LabeledTwoThumbs extends React.Component {
                 {this.state.values[index].toFixed(1)}
               </div>
               <div
-                className={moduleStyles.thumbVertLine}
+                className={md.thumbVertLine}
                 style={{
                   /* height: '16px',
                   width: '5px', */

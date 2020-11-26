@@ -35,8 +35,3 @@ export function cartReducer(state = initialState, action) {
       break;
   }
 }
-// const addToCartSuccess = (state, action) => {
-//   console.log("reducer state:", state)
-
-//   return { ...state, products: action.payload }
-// }

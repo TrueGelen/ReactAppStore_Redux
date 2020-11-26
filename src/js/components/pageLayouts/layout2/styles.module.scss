@@ -1,6 +1,20 @@
 @import '../../../../scss/smart-grid.sass';
 @import '../../../../scss/vars.scss';
 
+//styles for modify component
+.cardStyles{
+  margin-bottom: 15px;
+  width: calc(33.33% - 15px);
+
+  @include xs-block{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 10px;
+  }
+}
+
 //page styles
 .pageWrapper{	
   // border: 1px solid red;
@@ -100,7 +114,6 @@
 }
 
 //--filters
-
 .filterButton{
   display: none;
   background-color: $lb;

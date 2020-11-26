@@ -18,8 +18,8 @@ import { baseUrlImgs, productLabelsForStores } from '../constants'
 const initialState = {
   isLoading: false,
   error: '',
-  televisionsFromServer: [],
-  filteredTelevisions: [],
+  productsFromServer: [],
+  filteredProducts: [],
   product: null,
   filters: {
     price: {
@@ -50,8 +50,8 @@ export const televisionsReducer = (state = initialState, action) => {
     case GET_TELEVISIONS_SUCCESS:
       return {
         ...state,
-        televisionsFromServer: action.payload,
-        filteredTelevisions: [...action.payload],
+        productsFromServer: action.payload,
+        filteredProducts: [...action.payload],
         isLoading: false
       }
       break
@@ -79,7 +79,7 @@ export const televisionsReducer = (state = initialState, action) => {
     case FILTER_SUCCESS:
       return {
         ...state,
-        filteredTelevisions: action.payload.filteredTelevisions,
+        filteredProducts: action.payload.filteredProducts,
         filters: action.payload.filters
       }
       break

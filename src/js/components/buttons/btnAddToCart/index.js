@@ -24,7 +24,6 @@ function BtnAddToCart({
 
   return (
     <>
-      {console.log("=====BTN=====")}
       {inCart ?
         <div {...props}
           className={`${md.noselect}

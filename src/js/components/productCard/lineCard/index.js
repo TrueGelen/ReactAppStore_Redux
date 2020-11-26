@@ -1,4 +1,4 @@
-/* lib */
+/* libs */
 import React, { memo, useMemo } from 'react'
 import { useSelector, useDispatch, useStore } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -14,19 +14,6 @@ import {
   changeAmountSuccess
 } from '../../../Redux/actionCreators'
 
-// function LineCard({
-//   className,
-//   onClick,
-//   img,
-//   title,
-//   price,
-//   rest,
-//   description,
-//   button,
-//   labels,
-//   counter,
-//   inCart,
-//   ...props }) {
 function LineCard({
   className,
   onClick,
@@ -39,7 +26,7 @@ function LineCard({
   const store = useStore()
 
   const inCart = useMemo(
-    () => { console.log("useMemo inCart", Object.keys(store.getState().cart.products).length); return product.id in store.getState().cart.products },
+    () => product.id in store.getState().cart.products,
     [Object.keys(store.getState().cart.products).length])
 
   let arrDescription = []
@@ -62,7 +49,7 @@ function LineCard({
 
   return (
     <div className={`${md.productCard} ${className}`}>
-      {console.log(`=====LineCard: ${product.id}=====`)}
+      {/* {console.log(`=====LineCard: ${product.id}=====`)} */}
       <div className={md.imgContainer}>
         {img}
       </div>
@@ -99,52 +86,13 @@ export default memo(LineCard)
 
 LineCard.defaultProps = {
   className: undefined,
-  onClick: () => { },
-  img: {
-    path: null,
-    styles: null
-  },
-  title: {
-    styles: null,
-    text: null
-  },
-  price: {
-    styles: null,
-    text: null
-  },
-  rest: {
-    styles: null,
-    text: null
-  },
-  description: {},
-  labels: {},
-  button: null,
-  counter: null,
-  inCart: true
+  onClick: () => { }
 }
 
 LineCard.propTypes = {
   className: PropTypes.string,
   onClick: PropTypes.func,
-  img: PropTypes.shape({
-    path: PropTypes.string,
-    styles: PropTypes.string
-  }),
-  title: PropTypes.shape({
-    styles: PropTypes.string,
-    text: PropTypes.string
-  }),
-  price: PropTypes.shape({
-    styles: PropTypes.string,
-    text: PropTypes.string
-  }),
-  rest: PropTypes.shape({
-    styles: PropTypes.string,
-    text: PropTypes.string
-  }),
-  labels: PropTypes.object,
-  description: PropTypes.object,
-  button: PropTypes.node,
-  counter: PropTypes.node,
-  inCart: PropTypes.bool
+  baseUrlImgs: PropTypes.string.isRequired,
+  product: PropTypes.object.isRequired,
+  labels: PropTypes.object.isRequired
 }
