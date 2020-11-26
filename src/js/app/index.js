@@ -2,14 +2,11 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Link, NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
-
 /* components */
 import NoticeError from '../components/errors/notice'
-
 /* styles */
 import moduleStyles from './app.module.scss'
 import mainStyles from '../../scss/main.module.scss'
-
 /* other */
 import { routes, routesMap } from '../routes'
 import {

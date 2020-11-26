@@ -1,9 +1,8 @@
-/* lib */
-import React from 'react'
+/* libs */
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '@material-ui/core/Checkbox';
 import LabeledTwoThumbs from '../range';
-
 /* styles */
 import md from './styles.module.scss'
 
@@ -19,39 +18,43 @@ function Filters({
 
   // const [mobFilters, setMobFilters] = useState(false)
 
-  let checkboxes = []
-  for (let key in filters) {
-
-    if (key !== "price") {
-      checkboxes.push(
-        <div key={key}
-          className={md.filterWrap}>
-          <h4 className={md.filterTitle}>{filterLabels[key]}</h4>
-          <div className={md.filterBlock}>
-            {
-              Object.keys({ ...filters[key] }).map(val => {
-                return (
-                  <div key={val}
-                    className={md.checkBoxFilter}>
-                    <Checkbox
-                      checked={filters[key][val]}
-                      color="primary"
-                      inputProps={{ 'aria-label': 'secondary checkbox' }}
-                      onChange={(e) => { onFilter(key, val) }}
-                    />
-                    <p>{val}</p>
-                  </div>
-                )
-              })
-            }
+  let checkboxes = useMemo(() => {
+    // console.log("useMemo checkboxes")
+    let items = []
+    for (let key in filters) {
+      if (key !== "price") {
+        items.push(
+          <div key={key}
+            className={md.filterWrap}>
+            <h4 className={md.filterTitle}>{filterLabels[key]}</h4>
+            <div className={md.filterBlock}>
+              {
+                Object.keys({ ...filters[key] }).map(val => {
+                  return (
+                    <div key={val}
+                      className={md.checkBoxFilter}>
+                      <Checkbox
+                        checked={filters[key][val]}
+                        color="primary"
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                        onChange={(e) => { onFilter(key, val) }}
+                      />
+                      <p>{val}</p>
+                    </div>
+                  )
+                })
+              }
+            </div>
           </div>
-        </div>
-      )
+        )
+      }
     }
-  }
+    return items
+  }, [filters])
 
   return (
     <>
+      {/* {console.log("filters component")} */}
       <div
         className={isMobFilterOpen ?
           `${md.filtersWrapper} ${md.filtersWrapper_mob}`

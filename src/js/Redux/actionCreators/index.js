@@ -54,6 +54,7 @@ import {
   ERROR_HIDE
 } from '../actionTypes'
 
+/* TELEVISIONS */
 export function getTelevisionsRequest() {
   return {
     type: GET_TELEVISIONS_REQUEST
@@ -100,7 +101,7 @@ export function setFiltersRequest() {
 }
 
 export function setFiltersSuccess(state) {
-  const televisionsFromServer = state.televisionsFromServer
+  const productsFromServer = state.productsFromServer
   const labels = state._labels
   const filters = {
     ...state.filters,
@@ -115,7 +116,7 @@ export function setFiltersSuccess(state) {
   for (let key in labels) {
     if (key !== "about") {
       //.map() - get all values by key and in Set we make it unique. Also find a max price
-      [...new Set(televisionsFromServer.map(prod => {
+      [...new Set(productsFromServer.map(prod => {
         filters.price.max = Math.max(filters.price.max, Number(prod.price))
         filters.price.range.max = filters.price.max
         return prod.description[key]
@@ -140,7 +141,7 @@ export function filterRequest() {
 
 export function filterSuccess(state = "undefined", parameter = "undefined", value = "undefined") {
   // console.log("filter", state)
-  let filteredTelevisions = [...state.televisionsFromServer]
+  let filteredProducts = [...state.productsFromServer]
   let filters = {}
 
   const spreadArray = (obj) => {
@@ -169,7 +170,7 @@ export function filterSuccess(state = "undefined", parameter = "undefined", valu
   }
 
   for (let param in filters) {
-    filteredTelevisions = filteredTelevisions.filter(
+    filteredProducts = filteredProducts.filter(
       tv => Object.keys(filters[param])
         .some(val => {
           if (param === "price") {
@@ -182,7 +183,7 @@ export function filterSuccess(state = "undefined", parameter = "undefined", valu
   }
   return {
     type: FILTER_SUCCESS,
-    payload: { filteredTelevisions, filters }
+    payload: { filteredProducts, filters }
   }
 }
 
@@ -359,7 +360,7 @@ export function tabletsSetFiltersRequest() {
 }
 
 export function tabletsSetFiltersSuccess(state) {
-  const tabletsFromServer = state.tabletsFromServer
+  const productsFromServer = state.productsFromServer
   const labels = state._labels
   const filters = {
     ...state.filters,
@@ -374,7 +375,7 @@ export function tabletsSetFiltersSuccess(state) {
   for (let key in labels) {
     if (key !== "about") {
       //.map() - get all values by key and in Set we make it unique. Also find a max price
-      [...new Set(tabletsFromServer.map(prod => {
+      [...new Set(productsFromServer.map(prod => {
         filters.price.max = Math.max(filters.price.max, Number(prod.price))
         filters.price.range.max = filters.price.max
         return prod.description[key]
@@ -399,7 +400,7 @@ export function tabletsFilterRequest() {
 
 export function tabletsFilterSuccess(state = "undefined", parameter = "undefined", value = "undefined") {
   // console.log("filter", state)
-  let filteredTablets = [...state.tabletsFromServer]
+  let filteredProducts = [...state.productsFromServer]
   let filters = {}
 
   const spreadArray = (obj) => {
@@ -428,7 +429,7 @@ export function tabletsFilterSuccess(state = "undefined", parameter = "undefined
   }
 
   for (let param in filters) {
-    filteredTablets = filteredTablets.filter(
+    filteredProducts = filteredProducts.filter(
       tv => Object.keys(filters[param])
         .some(val => {
           if (param === "price") {
@@ -441,7 +442,7 @@ export function tabletsFilterSuccess(state = "undefined", parameter = "undefined
   }
   return {
     type: TABLETS_FILTER_SUCCESS,
-    payload: { filteredTablets, filters }
+    payload: { filteredProducts, filters }
   }
 }
 
@@ -511,7 +512,7 @@ export function phonesSetFiltersRequest() {
 }
 
 export function phonesSetFiltersSuccess(state) {
-  const phonesFromServer = state.phonesFromServer
+  const productsFromServer = state.productsFromServer
   const labels = state._labels
   const filters = {
     ...state.filters,
@@ -526,7 +527,7 @@ export function phonesSetFiltersSuccess(state) {
   for (let key in labels) {
     if (key !== "about") {
       //.map() - get all values by key and in Set we make it unique. Also find a max price
-      [...new Set(phonesFromServer.map(prod => {
+      [...new Set(productsFromServer.map(prod => {
         filters.price.max = Math.max(filters.price.max, Number(prod.price))
         filters.price.range.max = filters.price.max
         return prod.description[key]
@@ -551,7 +552,7 @@ export function phonesFilterRequest() {
 
 export function phonesFilterSuccess(state = "undefined", parameter = "undefined", value = "undefined") {
   // console.log("filter", state)
-  let filteredPhones = [...state.phonesFromServer]
+  let filteredProducts = [...state.productsFromServer]
   let filters = {}
 
   const spreadArray = (obj) => {
@@ -580,7 +581,7 @@ export function phonesFilterSuccess(state = "undefined", parameter = "undefined"
   }
 
   for (let param in filters) {
-    filteredPhones = filteredPhones.filter(
+    filteredProducts = filteredProducts.filter(
       tv => Object.keys(filters[param])
         .some(val => {
           if (param === "price") {
@@ -593,7 +594,7 @@ export function phonesFilterSuccess(state = "undefined", parameter = "undefined"
   }
   return {
     type: PHONES_FILTER_SUCCESS,
-    payload: { filteredPhones, filters }
+    payload: { filteredProducts, filters }
   }
 }
 

@@ -1,114 +1,98 @@
-/* lib */
-import React from 'react'
+/* libs */
+import React, { memo, useMemo } from 'react'
+import { useSelector, useDispatch, useStore } from 'react-redux'
 import PropTypes from 'prop-types'
-
+/* components */
+import Counter from '../../inputs/counter'
+import Button from '../../buttons/btnAddToCart'
 /* styles */
-import moduleStyles from './LineCard.module.scss'
+import md from './LineCard.module.scss'
+/* other */
+import {
+  addToCartSuccess,
+  removeFromCartSuccess,
+  changeAmountSuccess
+} from '../../../Redux/actionCreators'
 
-export default function LineCard({
+function LineCard({
   className,
   onClick,
-  img,
-  title,
-  price,
-  rest,
-  description,
-  button,
+  baseUrlImgs,
+  product,
   labels,
-  counter,
-  inCart,
-  ...otherProps }) {
+  ...props }) {
+  const dispatch = useDispatch()
+  useSelector(state => state.cart.products[product.id])
+  const store = useStore()
+
+  const inCart = useMemo(
+    () => product.id in store.getState().cart.products,
+    [Object.keys(store.getState().cart.products).length])
 
   let arrDescription = []
 
-  for (let key in description) {
+  for (let key in product.description) {
     if (key !== 'about') {
-      let p = <p key={Math.random()}>{labels[key]}: <span>{description[key]}</span></p>
+      let p = <p key={Math.random()}>{labels[key]}: <span>{product.description[key]}</span></p>
       arrDescription.push(p)
     }
   }
 
+  const changeCounter = (cnt) => dispatch(changeAmountSuccess(store.getState().cart, product.id, cnt))
+  const addToCart = () => dispatch(addToCartSuccess(store.getState().cart, product.id))
+  const removeFromCart = () => dispatch(removeFromCartSuccess(store.getState().cart, product.id))
+
+  const img = product.imgs.length && <img
+    src={`${baseUrlImgs}${product.imgs[0]}`}
+    className={`${md.imgInCard}`}>
+  </img>
+
   return (
-    <div {...otherProps} className={`${moduleStyles.productCard} ${className}`}>
-      <div className={moduleStyles.imgContainer}>
-        {
-          img &&
-          <img
-            src={img.path}
-            className={`${moduleStyles.imgInCard} ${img.styles}`}>
-          </img>
-        }
+    <div className={`${md.productCard} ${className}`}>
+      {/* {console.log(`=====LineCard: ${product.id}=====`)} */}
+      <div className={md.imgContainer}>
+        {img}
       </div>
 
-      <div className={moduleStyles.descriptionBlock}>
+      <div className={md.descriptionBlock}>
         <h2
-          className={`${moduleStyles.title} ${title.styles}`}
+          className={`${md.title}`}
           onClick={onClick}>
-          {title.text}
+          {product.title}
         </h2>
 
-        <div className={moduleStyles.description}>
+        <div className={md.description}>
           {arrDescription}
         </div>
       </div>
 
-      <div className={moduleStyles.priceBlock}>
-        <p><span>цена:</span> {price.text} <span>р.</span></p>
-        {inCart && counter}
-        {button}
+      <div className={md.priceBlock}>
+        <p><span>цена:</span> {product.price} <span>р.</span></p>
+        {inCart && <Counter
+          max={product.rest}
+          cnt={store.getState().cart.products[product.id] ? store.getState().cart.products[product.id].amount : 0}
+          onChange={changeCounter}
+          className={md.counter} />}
+        <Button
+          inCart={inCart}
+          onAdd={addToCart}
+          onRemove={removeFromCart} />
       </div>
     </div>
   )
 }
 
+export default memo(LineCard)
+
 LineCard.defaultProps = {
   className: undefined,
-  onClick: () => { },
-  img: {
-    path: null,
-    styles: null
-  },
-  title: {
-    styles: null,
-    text: null
-  },
-  price: {
-    styles: null,
-    text: null
-  },
-  rest: {
-    styles: null,
-    text: null
-  },
-  description: {},
-  labels: {},
-  button: null,
-  counter: null,
-  inCart: true
+  onClick: () => { }
 }
 
 LineCard.propTypes = {
   className: PropTypes.string,
   onClick: PropTypes.func,
-  img: PropTypes.shape({
-    path: PropTypes.string,
-    styles: PropTypes.string
-  }),
-  title: PropTypes.shape({
-    styles: PropTypes.string,
-    text: PropTypes.string
-  }),
-  price: PropTypes.shape({
-    styles: PropTypes.string,
-    text: PropTypes.string
-  }),
-  rest: PropTypes.shape({
-    styles: PropTypes.string,
-    text: PropTypes.string
-  }),
-  labels: PropTypes.object,
-  description: PropTypes.object,
-  button: PropTypes.node,
-  counter: PropTypes.node,
-  inCart: PropTypes.bool
+  baseUrlImgs: PropTypes.string.isRequired,
+  product: PropTypes.object.isRequired,
+  labels: PropTypes.object.isRequired
 }

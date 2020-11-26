@@ -536,7 +536,7 @@ function addTablets() {
       },
       imgs: ["hyawei/t5/front.png", "hyawei/t5/1.png"]
     },
-    {//10 todo
+    {//10
       title: 'HUAWEI MatePad LTE',
       price: 21590,
       rest: 30,
